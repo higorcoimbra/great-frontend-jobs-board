@@ -14,19 +14,29 @@ import { Job } from '../entities/job';
 })
 export class AppComponent {
   jobIds$: Observable<string[]>;
-  initialJobs$: Observable<Job[]>;
+  jobs$: Observable<Job[]>;
+  initialJobs: Job[];
+  jobsPageSize = 6;
 
   constructor(private jobService: JobService) {
+    this.initialJobs = [];
     this.jobIds$ = this.jobService.getJobIds();
-    this.initialJobs$ = this.jobIds$.pipe(
+    this.jobs$ = this.jobIds$.pipe(
       mergeAll(),
-      take(6),
+      take(this.jobsPageSize),
       mergeMap(id => this.jobService.getJobById(id)),
-      toArray()
+      toArray(),
+      tap(jobs => this.initialJobs = jobs)
     );
   }
 
   loadMore() {
-    console.log('load more works!');
+    this.jobsPageSize = this.jobsPageSize + 6;
+    this.jobs$ = this.jobIds$.pipe(
+      mergeAll(),
+      take(this.jobsPageSize),
+      mergeMap(id => this.jobService.getJobById(id)),
+      toArray()
+    );
   }
 }

@@ -1,6 +1,6 @@
 <div>
   <ul>
-    @for (item of initialJobs$ | async; track item.id) {
+    @for (item of jobs$ | async; track item.id) {
       <li>{{ item.title }}</li>
     } @empty {
       <li>Loading...</li>
