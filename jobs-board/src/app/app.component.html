@@ -1,5 +1,12 @@
 <div>
-  <p>{{ jobIds$ | async }}</p>
+  <ul>
+    @for (item of initialJobs$ | async; track item.id) {
+      <li>{{ item.title }}</li>
+    } @empty {
+      <li>Loading...</li>
+    }
+  </ul>
+  <button (click)="loadMore()">Load more..</button>
 </div>
 
 <router-outlet />
